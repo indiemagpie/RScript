@@ -1,2 +1,4 @@
 # RScript
-RScript - А script editing tool for Space Rangers HD
+RScript - Script editing tool for Space Rangers HD
+
+See [Releases](https://github.com/indiemagpie/RScript/releases)
