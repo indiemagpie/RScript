@@ -1,0 +1,10 @@
+﻿export function onInit() {
+  locations = newarray(1);
+  rewards = newarray(1);
+  //BuildListOfMMByPriority(rewards,40,69);
+  //ArrayRandomize(50,rewards);
+  rewards_text = newarray(3);
+  //rewards_text[0]='</color>'+BonusText(rewards[0])+'<color=0,0,0>';
+  //rewards_text[1]='</color>'+BonusText(rewards[1])+'<color=0,0,0>';
+  //rewards_text[2]='</color>'+BonusText(rewards[2])+'<color=0,0,0>';
+}

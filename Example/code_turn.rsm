@@ -1,0 +1,131 @@
+﻿export function onTurn() {
+    if (!points_reached) {
+        if (ShipPirateRankPoints(Player()) >= ShipNextPirateRankPoints(Player())) {
+            if (GetShipPirateRank(Player()) == 1) {
+                points_reached = 1;
+                if (!quest_started) {
+                    Ether(0, '818812AE-CE19-4409-869A-D980C0E82FB6', "Вами набрано достаточно очков пирата на звание <clr>рейдер<clrEnd>.");
+                }
+            }
+        }
+    }
+    if (quest_started) {
+        if (!stukach_killed_date) {
+            if (GroupCount(Stukach) == 0) {
+                stukach_killed_date = CurTurn();
+                if (ItemExist(Stukach_Capsule)) {
+                    if (!ShipInNormalSpace(Player()) || !ItemIn(Stukach_Capsule, ShipStar(Player()))) {
+                        counter = 0;
+                        while (counter < GalaxyStars()) {
+                            if (ItemIn(Stukach_Capsule, GalaxyStar(counter))) {
+                                ItemDestroy(Stukach_Capsule, 1);
+                            }
+                            counter = counter + 1;
+                        }
+                        ReleaseItemFromScript(Stukach_Capsule);
+                        if (stukach_picked) {
+                            Ether(0, '9DEA6BA7-3D4B-4B14-B715-D6F501DF51BA', "Воздух в капсуле стукача закончился и он задохнулся.");
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if (!stukach_dead) {
+        if (stukach_killed_date) {
+            if (ItemExist(Stukach_Capsule)) {
+                if (ItemIn(Stukach_Capsule, Player()) && !stukach_picked) {
+                    stukach_picked = 1;
+                    Ether(3, '17947350-25C4-4E2D-89FD-A24BD0BEE7C1', "Вы подобрали капсулу с \"неудобным грузом\". Решайте, куда ее отвезти: пиратам или на любую из планет Коалиции.");
+                }
+                if (!ItemIn(Stukach_Capsule, Player())) {
+                    if ((CurTurn() > stukach_killed_date + 3) || !ItemIn(Stukach_Capsule, ShipStar(Player()))) {
+                        counter = 0;
+                        while (counter < GalaxyStars()) {
+                            if (ItemIn(Stukach_Capsule, GalaxyStar(counter))) {
+                                ItemDestroy(Stukach_Capsule, 1);
+                            }
+                            counter = counter + 1;
+                        }
+                        ReleaseItemFromScript(Stukach_Capsule);
+                        if (stukach_picked) {
+                            Ether(0, '9DEA6BA7-3D4B-4B14-B715-D6F501DF51BA', "Воздух в капсуле стукача закончился и он задохнулся.");
+                        }
+                    }
+                }
+            }
+            if (!ItemExist(Stukach_Capsule) && !completion_type) {
+                stukach_dead = 1;
+                Ether(3, '573DD065-E77D-4FFB-A280-ACC0019873CD', Format("Задание на получение звания <clr>рейдер<clrEnd>: убить стукача <0>.<br><br><color=0,255,0>Задание выполнено.</color>", "<0>", stukach_fullname));
+                Ether(0, 'B868DCF1-8DDB-41F1-9BBB-4DDEE804E730', "Вы выполнили задание по устранению шпиона. Вас ждут на любой пиратской базе.");
+                if (stukach_picked && !stukach_resqued) {
+                    stukach_picked = 0;
+                    Ether(4, '17947350-25C4-4E2D-89FD-A24BD0BEE7C1', "Вы подобрали капсулу с \"неудобным грузом\". Решайте, куда ее отвезти: пиратам или на любую из планет Коалиции.");
+                }
+            }
+        }
+    }
+    if (GroupCount(Stukach)) {
+        if (!message_from_gov) {
+            if (ShipInNormalSpace(Player())) {
+                gov_planet = 0;
+                counter = BuildListOfQuestPossibleLocations(locations, ShipStar(Player()), 1, 255);
+                if (counter) {
+                    counter = StarListToTransitPlanetList(locations, ShipStar(Player()), ShipStar(GroupToShip(Stukach)), 70, 150, 200, 100, 90, 75);
+                }
+                if (counter) {
+                    gov_planet = Id(locations[0]);
+                }
+                if (gov_planet) {
+                    message_from_gov = 1;
+                    Ether(0, 'ED99C452-1542-41D4-9911-9E66254B1955', Format("<0>, ваша любимая буренка наконец-то отелилась. В прямом эфире, к сожалению. Теперь вся Галактика знает о вашем происхождении и о некоторых подробностях личной жизни из раннего детства - за это скажите большое спасибо своим не в меру болтливым родственникам. <br>В связи с этим примечательным событием, ждем вас в мобильном штабе космических рейнджеров в системе <1> на планете <2> для участия в доверительной беседе.<br><clr><clrEnd><br><clr>Командор Бройлерр<clrEnd>", "<0>", ShipName(Player()), "<1>", Name(PlanetToStar(IdToPlanet(gov_planet))), "<2>", Name(IdToPlanet(gov_planet))));
+                }
+            }
+        }
+        if (message_from_gov && !gov_talk) {
+            if (change_loc) {
+                gov_planet = 0;
+                counter = BuildListOfQuestPossibleLocations(locations, ShipStar(Player()), 1, 255);
+                if (counter) {
+                    counter = StarListToTransitPlanetList(locations, ShipStar(Player()), ShipStar(GroupToShip(Stukach)), 70, 150, 200, 100, 90, 75);
+                }
+                if (counter) {
+                    gov_planet = Id(locations[0]);
+                }
+                if (gov_planet) {
+                    change_loc = 0;
+                    alt_message = 1;
+                    if (!NoComeKlingToStar(PlanetToStar(IdToPlanet(gov_planet)))) {
+                        block_sys_date = CurTurn();
+                        NoComeKlingToStar(PlanetToStar(IdToPlanet(gov_planet)), 1);
+                    }
+                    Ether(0, '93C643B9-6A8B-4CDE-93A5-13CB26BB5A0B', Format("Продаю малокский табурет с никелированной кроватью-тумбочкой на планете <0> в системе <1>. Если предложение заинтересовало - поспеши, пока другие \"покупатели\" не нагрянули.<br><clr><clrEnd><br><clr>Отец.<clrEnd>", "<0>", Name(IdToPlanet(gov_planet)), "<1>", Name(PlanetToStar(IdToPlanet(gov_planet)))));
+                }
+            }
+            if (!change_loc) {
+                if (PlanetOwner(IdToPlanet(gov_planet)) < Kling) {
+                    if (!ShipInNormalSpace(Player())) {
+                        if (!alt_message) {
+                            Ether(0, 'ED99C452-1542-41D4-9911-9E66254B1955', Format("<0>, ваша любимая буренка наконец-то отелилась. В прямом эфире, к сожалению. Теперь вся Галактика знает о вашем происхождении и о некоторых подробностях личной жизни из раннего детства - за это скажите большое спасибо своим не в меру болтливым родственникам. <br>В связи с этим примечательным событием, ждем вас в мобильном штабе космических рейнджеров в системе <1> на планете <2> для участия в доверительной беседе.<br><clr><clrEnd><br><clr>Командор Бройлерр<clrEnd>", "<0>", ShipName(Player()), "<1>", Name(PlanetToStar(IdToPlanet(gov_planet))), "<2>", Name(IdToPlanet(gov_planet))));
+                        }
+                        if (alt_message) {
+                            Ether(0, '93C643B9-6A8B-4CDE-93A5-13CB26BB5A0B', Format("Продаю малокский табурет с никелированной кроватью-тумбочкой на планете <0> в системе <1>. Если предложение заинтересовало - поспеши, пока другие \"покупатели\" не нагрянули.<br><clr><clrEnd><br><clr>Отец.<clrEnd>", "<0>", Name(IdToPlanet(gov_planet)), "<1>", Name(PlanetToStar(IdToPlanet(gov_planet)))));
+                        }
+                    }
+                }
+                if (PlanetOwner(IdToPlanet(gov_planet)) >= Kling) {
+                    Ether(0, '176203FF-F4FA-403C-ACA1-BF920BAE330D', Format("Система <0> захвачена. Встреча откладывается на неопределенный срок. Подробности - позднее.<br><clr><clrEnd><br><clr>Отец.<clrEnd>", "<0>", Name(PlanetToStar(IdToPlanet(gov_planet)))));
+                    change_loc = 1;
+                    gov_planet = 0;
+                }
+            }
+        }
+    }
+    if (block_sys_date) {
+        if ((block_sys_date + 30) < CurTurn()) {
+            block_sys_date = 0;
+            NoComeKlingToStar(PlanetToStar(IdToPlanet(gov_planet)), 0);
+        }
+    }
+    if (!rewardSeed) rewardSeed = Rnd(0, 2000000000);
+}

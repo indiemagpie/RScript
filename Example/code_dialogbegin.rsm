@@ -1,0 +1,92 @@
+﻿export function onDialogBegin() {
+    if (GetShipRuins(Player()) > 0) {
+        if (ShipType(GetShipRuins(Player())) == 'PB') {
+            if (GetShipPirateRank(Player()) == 1) {
+                if (ShipPirateRankPoints(Player()) < ShipNextPirateRankPoints(Player())) {
+                    AddDialogInject('DialogPB1', '', "Когда я получу звание рейдер?", 1);
+                }
+                if (ShipPirateRankPoints(Player()) >= ShipNextPirateRankPoints(Player())) {
+                    if (!quest_complete) {
+                        if (quest_started && !quest_taken) {
+                            AddDialogOverride('DialogPB3', 10);
+                        }
+                        if (!quest_started && !CoalitionDefeated()) {
+                            counter = BuildListOfQuestPossibleLocations(locations, ShipStar(Player()), 20, 60);
+                            if (!counter) {
+                                AddDialogInject('DialogPB2', '', "Я хочу получить звание рейдер", 1);
+                            }
+                            if (counter) {
+                                counter = StarListToPlanetList(locations, 150, 200, 100, 90, 75, visited_locations, 50);
+                                if (!counter) {
+                                    AddDialogInject('DialogPB2', '', "Я хочу получить звание рейдер", 1);
+                                }
+                                if (counter) {
+                                    quest_planet = locations[0];
+                                    quest_star = PlanetToStar(quest_planet);
+                                    quest_ship = BuyPirate(quest_planet);
+                                    stukach_id = Id(quest_ship);
+                                    stukach_race = ShipPilotRace(quest_ship);
+                                    stukach_face = Rnd(1, 10);
+                                    ShipFace(quest_ship, stukach_face);
+                                    stukach_name = ShipName(quest_ship);
+                                    stukach_fullname = Name(quest_ship);
+                                    ShipJoin(Stukach, quest_ship);
+                                    NoTargetToShip(quest_ship, 2);
+                                    quest_item = CreateQuestItem('Usl_CapsuleStukach');
+                                    LinkItemToScript(quest_item, Stukach_Capsule);
+                                    ShipAddDropItem(quest_ship, quest_item);
+                                    AddDialogOverride('DialogPB3', 10);
+                                    GotoGov(1);
+                                    quest_planet = Id(quest_planet);
+                                    quest_star = Id(quest_star);
+                                    ArrayAdd(visited_locations, quest_star);
+                                    quest_started = 1;
+                                    Ether(3, '573DD065-E77D-4FFB-A280-ACC0019873CD', Format("Задание на получение звания <clr>рейдер<clrEnd>: убить стукача <0>.", "<0>", stukach_fullname));
+                                }
+                            }
+                        }
+                        if (stukach_killed_date) {
+                            if (ItemIn(Stukach_Capsule, Player())) {
+                                AddDialogOverride('DialogPB4', 10);
+                                GotoGov(1);
+                                if (!completion_type) {
+                                    Ether(4, '573DD065-E77D-4FFB-A280-ACC0019873CD', Format("Задание на получение звания <clr>рейдер<clrEnd>: убить стукача <0>.<br><br><color=0,255,0>Задание выполнено.</color>", "<0>", stukach_fullname));
+                                }
+                            }
+                            if (!ItemExist(Stukach_Capsule)) {
+                                AddDialogOverride('DialogPB4', 10);
+                                GotoGov(1);
+                                if (!completion_type) {
+                                    Ether(4, '573DD065-E77D-4FFB-A280-ACC0019873CD', Format("Задание на получение звания <clr>рейдер<clrEnd>: убить стукача <0>.<br><br><color=0,255,0>Задание выполнено.</color>", "<0>", stukach_fullname));
+                                }
+                                if (stukach_picked) {
+                                    Ether(4, '17947350-25C4-4E2D-89FD-A24BD0BEE7C1', "Вы подобрали капсулу с \"неудобным грузом\". Решайте, куда ее отвезти: пиратам или на любую из планет Коалиции.");
+                                }
+                            }
+                        }
+                    }
+                    if (CoalitionDefeated() && !quest_started) {
+                        money_for_rank = 4000;
+                        AddDialogInject('DialogPB6', '', "Я хочу получить звание рейдер", 1);
+                    }
+                }
+            }
+        }
+    }
+    if (GetShipPlanet(Player()) > 0) {
+        if (quest_started) {
+            if (GroupCount(Stukach)) {
+                if (Id(GetShipPlanet(Player())) == gov_planet) {
+                    if (!gov_talk) {
+                        AddDialogOverride('DialogPlanet2', 10);
+                    }
+                }
+            }
+        }
+        if (ItemIn(Stukach_Capsule, Player())) {
+            if (PlanetOwner(GetShipPlanet(Player())) < Kling) {
+                AddDialogOverride('DialogPlanet', 10);
+            }
+        }
+    }
+}

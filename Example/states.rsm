@@ -1,0 +1,42 @@
+﻿state("StateNew", {move: "none", takeAllItem: false, code: function() {
+    if (GroupCount(Stukach) == 0) {
+        if (!stukach_talk) {
+            if (ItemIn(Stukach_Capsule, ShipStar(Player()))) {
+                if (ShipInNormalSpace(Player())) {
+                    if (Dist(Stukach_Capsule, Player()) < 1000) {
+                        if (!CoalitionDefeated()) {
+                            temp_planet = FindPlanet(ShipStar(Player()), 'NotMaloc,NotPeleng,NotPeople,NotFei,NotGaal,NotPirateClan', 0, 100);
+                            if (!temp_planet) {
+                                temp_planet = StarPlanets(ShipStar(Player()), 0);
+                            }
+                            planet_owner = PlanetRace(temp_planet, stukach_race);
+                            quest_ship = BuyPirate(temp_planet);
+                            PlanetRace(temp_planet, planet_owner);
+                            ShipFace(quest_ship, stukach_face);
+                            SetName(quest_ship, stukach_name);
+                            itemlocx = CoordX(Stukach_Capsule);
+                            itemlocy = CoordY(Stukach_Capsule);
+                            ShipSetCoords(quest_ship, itemlocx, itemlocy);
+                            ShipJoin(Dummy, quest_ship);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}});
+
+state("StateStukach", {move: "free", takeAllItem: false, code: function() {
+    if (ShipGetBad(CurShip) == Player())
+        player_kills_stukach = 1;
+    else
+        player_kills_stukach = 0;
+}});
+
+state("StateNone", {move: "none", takeAllItem: false, code: function() {
+    if(!stukach_talk) {
+        Dialog(DialogStukach, CurShip);
+        ShipDestroy(CurShip);
+    }
+}});
+

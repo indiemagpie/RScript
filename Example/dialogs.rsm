@@ -1,0 +1,428 @@
+﻿dialog("DialogPB1", {code: function() {
+    points='<clrEnd>'+CT('FormRuins.PB.RankPoints.RankPoints');
+    DChange(DialogMsg1);
+    exit;
+}});
+
+dialog("DialogPB3", {code: function() {
+    GotoGov(2);
+    DChange(DialogMsg0);
+    exit;
+}});
+
+dialog("DialogPB4", {code: function() {
+    GotoGov(2);
+    if (!completion_type) {
+        if (!ItemExist(Stukach_Capsule)) {
+            if (stukach_resqued) {
+                completion_type = 3;
+            }
+            if (!stukach_resqued) {
+                completion_type = 2;
+                item_type = Rnd(0, 1000) % ArrayDim(reward_eq_size);
+                bonus_name = pirate_mod[item_type];
+                bonus_name = bonus_name + ' I';
+                if (GalaxyTechLevel() > 2) {
+                    bonus_name = bonus_name + 'I';
+                }
+                if (GalaxyTechLevel() > 4) {
+                    bonus_name = bonus_name + 'I';
+                }
+                if (FindBonusByName(bonus_name) > -1) {
+                    quest_item = CreateEquipmentWithSpecial(
+                        FindBonusByName(bonus_name),
+                        reward_eq_size[item_type],
+                        GalaxyTechLevel(),
+                        ShipOwner(GetShipRuins(Player())));
+                } else quest_item = CreateEquipment(Rnd(t_FuelTanks, t_DefGenerator), 20, GalaxyTechLevel(), ShipOwner(Player()));
+                reward_item = DeleteTags(ItemFullName(quest_item));
+                if (ArrayDim(reward_eq_size) > 1) {
+                    ArrayDelete(reward_eq_size, item_type);
+                    ArrayDelete(pirate_mod, item_type);
+                    ArrayDelete(gov_mod, item_type);
+                }
+                AddItemToShip(Player(), quest_item);
+            }
+        }
+        if (ItemExist(Stukach_Capsule)) {
+            item_type = Rnd(0, 1000) % ArrayDim(reward_eq_size);
+            bonus_name = pirate_mod[item_type];
+            bonus_name = bonus_name + ' I';
+            if (GalaxyTechLevel() > 2) {
+                bonus_name = bonus_name + 'I';
+            }
+            if (GalaxyTechLevel() > 4) {
+                bonus_name = bonus_name + 'I';
+            }
+            if (FindBonusByName(bonus_name) > -1) {
+                quest_item = CreateEquipmentWithSpecial(
+                    FindBonusByName(bonus_name),
+                    reward_eq_size[item_type],
+                    GalaxyTechLevel(),
+                    ShipOwner(GetShipRuins(Player())));
+            } else quest_item = CreateEquipment(Rnd(t_FuelTanks, t_DefGenerator), 20, GalaxyTechLevel(), ShipOwner(Player()));
+            reward_item = DeleteTags(ItemFullName(quest_item));
+            if (ArrayDim(reward_eq_size) > 1) {
+                ArrayDelete(reward_eq_size, item_type);
+                ArrayDelete(pirate_mod, item_type);
+                ArrayDelete(gov_mod, item_type);
+            }
+            AddItemToShip(Player(), quest_item);
+            completion_type = 1;
+            FreeItem(GetItemFromShip(Player(), FindItemInShip(Player(), Stukach_Capsule)));
+            Ether(4, '17947350-25C4-4E2D-89FD-A24BD0BEE7C1', "Вы подобрали капсулу с \"неудобным грузом\". Решайте, куда ее отвезти: пиратам или на любую из планет Коалиции.");
+        }
+    }
+    if(completion_type) {
+      BuildListOfMMByPriority(rewards, 40, 69);
+      ArrayRandomize(50, rewards, rewardSeed);
+      rewards_text[0] = '</color>' + BonusText(rewards[0]) + '<color=0,0,0>';
+      rewards_text[1] = '</color>' + BonusText(rewards[1]) + '<color=0,0,0>';
+      rewards_text[2] = '</color>' + BonusText(rewards[2]) + '<color=0,0,0>';
+      if(completion_type == 1) {
+        DChange(DialogMsg5);
+        exit;
+      }
+      if(completion_type == 2) {
+        DChange(DialogMsg6);
+        exit;
+      }
+      if(completion_type == 3) {
+        DChange(DialogMsg4);
+        exit;
+      }
+    }
+}});
+
+dialog("DialogPlanet", {code: function() {
+    stukach_resqued = 1;
+    FreeItem(GetItemFromShip(Player(), FindItemInShip(Player(), Stukach_Capsule)));
+    item_type = Rnd(0, 1000) % ArrayDim(reward_eq_size);
+    bonus_name = gov_mod[item_type];
+    bonus_name = bonus_name + ' I';
+    if (GalaxyTechLevel() > 2) {
+        bonus_name = bonus_name + 'I';
+    }
+    if (GalaxyTechLevel() > 4) {
+        bonus_name = bonus_name + 'I';
+    }
+    if (FindBonusByName(bonus_name) > -1) {
+        quest_item = CreateEquipmentWithSpecial(
+            FindBonusByName(bonus_name),
+            reward_eq_size[item_type],
+            GalaxyTechLevel(),
+            PlanetOwner(GetShipPlanet(Player())));
+    } else quest_item = CreateEquipment(Rnd(t_FuelTanks, t_DefGenerator), 20, GalaxyTechLevel(), ShipOwner(Player()));
+    reward_item = DeleteTags(ItemFullName(quest_item));
+    AddItemToShip(Player(), quest_item);
+    if (ArrayDim(reward_eq_size) > 1) {
+        ArrayDelete(reward_eq_size, item_type);
+        ArrayDelete(pirate_mod, item_type);
+        ArrayDelete(gov_mod, item_type);
+    }
+    agent_counter = agent_counter + 1;
+    Ether(4, '17947350-25C4-4E2D-89FD-A24BD0BEE7C1', "Вы подобрали капсулу с \"неудобным грузом\". Решайте, куда ее отвезти: пиратам или на любую из планет Коалиции.");
+    DChange(DialogMsg3);
+    exit;
+}});
+
+dialog("DialogPB2", {code: function() {
+    counter = 1;
+    counter2 = 0;
+    syst_dom = 0;
+    syst_pir = 0;
+    cycle_flag = 1;
+    while (cycle_flag) {
+        if (SectorVisible(StarToCon(StarNearbyStars(StarNew, counter)))) {
+            counter2 = counter2 + 1;
+            if (StarOwner(StarNearbyStars(StarNew, counter)) == 1) {
+                syst_dom = syst_dom + 1;
+            }
+            if (StarOwner(StarNearbyStars(StarNew, counter)) == 2) {
+                syst_pir = syst_pir + 1;
+            }
+        }
+        counter = counter + 1;
+        if (counter == GalaxyStars()) {
+            cycle_flag = 0;
+        }
+        if (counter2 == 20) {
+            cycle_flag = 0;
+        }
+    }
+    if(syst_pir < syst_dom) {
+      DChange(DialogMsg2);
+      exit;
+    }
+    if(syst_pir >= syst_dom) {
+      DChange(DialogMsg24);
+      exit;
+    }
+}});
+
+dialog("DialogPB6", {message: "DialogMsg19"});
+
+dialog("DialogPlanet2", {message: "DialogMsg26"});
+
+dialog("DialogStukach", {code: function() {
+    stukach_talk = 1;
+    counter = GalaxyEvents() - 1;
+    while (counter >= 0) {
+        if (GalaxyEventType(counter) == 'PlayerKillsShip') {
+            if (GalaxyEventData(counter, 2) == stukach_id) {
+                player_kills_stukach = 1;
+            }
+        }
+        if (GalaxyEventType(counter) == 'PlayerAssistKillsShip') {
+            if (GalaxyEventData(counter, 2) == stukach_id) {
+                player_kills_stukach = 1;
+            }
+        }
+        if (GalaxyEventType(counter) == 'PlayerCompanionKillsShip') {
+            if (GalaxyEventData(counter, 2) == stukach_id) {
+                player_kills_stukach = 1;
+            }
+        }
+        if (GalaxyEventType(counter) == 'PlayerCompanionAssistKillsShip') {
+            if (GalaxyEventData(counter, 2) == stukach_id) {
+                player_kills_stukach = 1;
+            }
+        }
+        if (GalaxyEventDate(counter) < CurTurn() - 2) {
+            counter = 0;
+        }
+        counter = counter - 1;
+    }
+    if(!player_kills_stukach) {
+      DChange(DialogMsg25);
+      exit;
+    }
+    if(player_kills_stukach) {
+      DChange(DialogMsg7);
+      exit;
+    }
+}});
+
+dialogMsg("DialogMsg0", {text: "С возвращением, <ShipName(Player())>! Судя по твоей довольной физиономии, ты уже чувствуешь себя готовым к получению следующего звания.<br>Не обольщайся, сразу тебе говорю. Задание, которое тебе предстоит выполнить, очень сложное и опасное. Многим подающим надежды пиратам его поручали, но мало кто из них оставался в живых, не потеряв во время миссии хотя бы одну из своих конечностей...<br>Что это ты побледнел, <ShipName(Player())>? Расслабься, я просто шучу! Задание - легкотня. Помнится, когда я шел на повышение, мне даже специально готовиться к его выполнению не пришлось. Сейчас, где-то тут оно у меня было записано. Ага... вот оно.<br>Итак, <ShipName(Player())>, твоя миссия... да сделай уже мордочку попроще, не напрягайся так! Так вот, твоя миссия заключается в том, чтобы грохнуть одного пирата. Да, я не оговорился, ты все правильно услышал, и я не работаю на Коалицию. Просто этот маленький нахаленыш втерся к нам в доверие, а теперь, как оказалось, сливает ценные данные о наших делах спецслужбам. Нет, ты представляешь? Мы к нему со всей душой, а он на нас от всей души...<br>Короче, в данный момент этот стукачок находится на корабле <Name(GroupToShip(Stukach))> и прямо сейчас в системе <Name(ShipStar(GroupToShip(Stukach)))> сливает очередную порцию данных фараонам, думая, что мы не в курсах этого действа. Тебе надо слетать туда и переселить этого \"дятла\" в райский сад - там ему будет лучше, чем в этом жестоком мире... Все понял?", answers: ["DialogAnswer3", "DialogAnswer4"]});
+
+dialogMsg("DialogMsg1", {text: "Для получения звания рейдер ты должен набрать <ShipNextPirateRankPoints(Player())> очков пиратского рейтинга. У тебя сейчас <ShipPirateRankPoints(Player())> очков.<br>На случай, если ты забыл, вот наш прейскурант:<br><points>", answers: ["DialogAnswer30"]});
+
+dialogMsg("DialogMsg2", {text: "Извини, не до того нам сейчас. \"Домики\" наступают по всем фронтам, мы временно прекратили выдачу новых званий.", answers: ["DialogAnswer30"]});
+
+dialogMsg("DialogMsg3", {text: "<ShipName(Player())>, вы не просто спасли жизнь вставшему на путь исправления пирату, а оказали нам огромную услугу. Теперь я могу сказать, что пассажир спасательной капсулы - это секретный агент Коалиции, которого мы внедрили в пиратскую среду, чтобы получить доступ к их секретам. Жаль, конечно, что корсары его так быстро раскусили. Но информация, которую он добыл, того стоила.<br>Вы совершили достойный для истинного космического рейнджера поступок, за который полагается награда. С чувством огромного уважения мы вручаем вам <reward_item>. Примите наши поздравления!", answers: ["DialogAnswer31"]});
+
+dialogMsg("DialogMsg4", {text: "Отлично, юнга! Вернее, отлично, <clr>рейдер<clrEnd>! Да, именно так тебя теперь стоит называть! Ты доказал, что вполне достоин этого звания. По этому поводу выбери себе какую-нибудь безделушку в знак признательности братства за оказанную услугу:<br>-----------------------------------------------<br>1. Микромодуль <BonusName(rewards[0])><br>Характеристики: <rewards_text[0]><br><br>-----------------------------------------------<br>2. Микромодуль <BonusName(rewards[1])><br>Характеристики: <rewards_text[1]><br><br>-----------------------------------------------<br>3. Микромодуль <BonusName(rewards[2])><br>Характеристики: <rewards_text[2]>", answers: ["DialogAnswer18", "DialogAnswer19", "DialogAnswer20"]});
+
+dialogMsg("DialogMsg5", {text: "<ShipName(Player())>, зачем ты сюда приволок эту капсулу с хламом? Нам здесь мусор не нужен. Ладно, я сам все сделаю. Где-то тут был мой плазмоган... Сейчас проделаю пару дырок в этой жестянке для вентиляции и выкину ее в открытый космос.<br>А тебя, <ShipName(Player())>, я поздравляю с повышением. Теперь ты - самый настоящий <clr>рейдер<clrEnd>! По этому поводу тебе полагается подарок от нашей базы - <reward_item>, а также небольшой презент от братства, выбирай один из трех:<br>-----------------------------------------------<br>1. Микромодуль <BonusName(rewards[0])><br>Характеристики: <rewards_text[0]><br><br>-----------------------------------------------<br>2. Микромодуль <BonusName(rewards[1])><br>Характеристики: <rewards_text[1]><br><br>-----------------------------------------------<br>3. Микромодуль <BonusName(rewards[2])><br>Характеристики: <rewards_text[2]><br>", answers: ["DialogAnswer21", "DialogAnswer22", "DialogAnswer23"]});
+
+dialogMsg("DialogMsg6", {text: "Отлично, юнга! Вернее, отлично, <clr>рейдер<clrEnd>! Да, именно так тебя теперь стоит называть! Ты доказал, что вполне достоин этого звания. По этому поводу тебе полагается подарок от нашей базы - <reward_item>, а также выбери себе какую-нибудь безделушку в знак признательности братства за оказанную услугу:<br>-----------------------------------------------<br>1. Микромодуль <BonusName(rewards[0])><br>Характеристики: <rewards_text[0]><br><br>-----------------------------------------------<br>2. Микромодуль <BonusName(rewards[1])><br>Характеристики: <rewards_text[1]><br><br>-----------------------------------------------<br>3. Микромодуль <BonusName(rewards[2])><br>Характеристики: <rewards_text[2]><br>", answers: ["DialogAnswer18", "DialogAnswer19", "DialogAnswer20"]});
+
+dialogMsg("DialogMsg7", {text: "Эй, братишка, погоди минутку, не убивай меня! Ну чего я тебе сделал?", answers: ["DialogAnswer6"]});
+
+dialogMsg("DialogMsg8", {text: "Специально для тех, кто не понял, уточняю: стукача надо грохнуть. И чем скорее, тем лучше! Усек?", answers: ["DialogAnswer5"]});
+
+dialogMsg("DialogMsg9", {text: "Отлично, так держать! Ждем от тебя исключительно хороших новостей.", answers: ["DialogAnswer2"]});
+
+dialogMsg("DialogMsg10", {text: "Тогда пошевеливайся! Ждем от тебя исключительно хороших новостей.", answers: ["DialogAnswer2"]});
+
+dialogMsg("DialogMsg11", {text: "А, вот оно что. Да это все вранье, я тут никаким боком не причастен! Никогда и никому я не стучал, родной селезенкой клянусь!", answers: ["DialogAnswer7"]});
+
+dialogMsg("DialogMsg12", {text: "Слушай, может быть тебе денег дать? У меня есть немного! Только не убивай меня, уж очень жить хочется! Я ведь еще совсем молодой...", answers: ["DialogAnswer8", "DialogAnswer11"]});
+
+dialogMsg("DialogMsg13", {text: "<money_offer> cr. тебя устроят? Ты извини, я тут недавно погорел на торговле, иначе больше бы дал.", answers: ["DialogAnswer9", "DialogAnswer10"]});
+
+dialogMsg("DialogMsg14", {text: "Да ладно тебе! Не будь таким принципиальным! Подумаешь, пощадил одного маленького пирата. Тебе пустяк, а мне жизнь сохранишь.", answers: ["DialogAnswer12", "DialogAnswer13"]});
+
+dialogMsg("DialogMsg15", {text: "Слушай, ты вроде толковый, рейнджер опять же, в рейнджеры кто попало не попадет. То, что ты пошел в пираты - это дело твое, не мне судить, сам такой же. Но в чем смысл этого твоего поступка? Ведь смотри, пираты захватывают системы, а после этого в них бардак, разруха, экономика рушится, мирные люди страдают. В это же время с другой стороны доминаторы атакуют. И ни одного военного корабля в округе. А пираты почти все трусливые хиляки и разлетятся по сторонам, стоит в систему хоть одному доминатору залететь. Мы оглянуться не успеем, как потеряем всю галактику. И пираты так же с носом останутся. Или скажешь, что они смогут толково противостоять доминаторам? Верится с трудом. Я вот все это понимаю, надеюсь, что и ты поймешь.", answers: ["DialogAnswer14", "DialogAnswer15"]});
+
+dialogMsg("DialogMsg16", {text: "<ShipName(Player())>, ты тогда уж не бросай меня тут, а то кислорода в капсуле на три дня", answers: ["DialogAnswer16", "DialogAnswer17"]});
+
+dialogMsg("DialogMsg17", {text: "Правильный выбор. Ну а теперь можешь расслабиться, отдохнуть, выпить в баре и все такое...", answers: ["DialogAnswer24"]});
+
+dialogMsg("DialogMsg18", {text: "Недурной выбор. А теперь исчезни. Нам пора тут немного прибраться. Эй, стукач, хочешь подышать свежим космосом? <ShipName(Player())>, ты еще здесь?! МАРШ В БАР!", answers: ["DialogAnswer1"]});
+
+dialogMsg("DialogMsg19", {text: "<ShipName(Player())>! Рад с вами познакомиться, так сказать, лично. Что значит \"где моя корова\"? А, вы про шифровку? Расслабьтесь, это сообщение было отправлено специально, чтобы у нас были официальные основания оторвать от важных дел одного из героев Галактики. Не смущайтесь. Слава о ваших подвигах летит впереди вас. Но, к сожалению, в реальности все не так оптимистично, как нам бы хотелось.<br>Я представляю специальный отдел Коалиции по борьбе с пиратством. Мы не отрицаем, что каперство в определенные моменты даже полезно для развития общества и технологий, но происходящее сейчас выходит за рамки допустимого. <br>Как нам стало известно, группа влиятельных пиратов решила отойти от своего привычного ремесла грабежа кораблей и торговли контрабандой. Они решили легализоваться. Казалось бы, в самом поступке ничего особенного нет, рано или поздно годы берут свое. Но в этом случае все идет по иному сценарию. <br>Во-первых: возраст этих пиратов далек от пенсионного, да и состояние здоровья близко к идеальному. <br>Во-вторых: они сразу проявили любопытство к реальному сектору экономики, уделив особое внимание тем объектам, где их интересы пересекались с интересами крупных политиков. <br>В-третьих: через некоторое время после этого, эти самые политики приняли несколько довольно странных решений, от которых больше всего выиграли влиятельные пираты и их активы. <br>В-четвертых: вскоре после того как мы начали распутывать этот узел коррупции и злоупотреблений властью, на нас стали давить \"сверху\". Отдел попытались \"реорганизовать\" - убрать из него наиболее активных сотрудников, поставив на их место каких-нибудь более удобных персонажей. К счастью, эту атаку нам удалось сравнительно легко отбить. Но кто поручится, что так будет и дальше?<br>Исходя из всего вышесказанного, можно прямо сказать: сейчас криминальные структуры пытаются слиться с реальной политической властью, а точнее подмять ее под себя, используя доходы от незаконной деятельности. Если им это удастся, то можно будет забыть и про демократию, и про свободу слова, и про справедливый суд.", answers: ["DialogAnswer25"]});
+
+dialogMsg("DialogMsg20", {text: "Не будем играть в прятки. Нам известно, что вы один из тех, кто принял \"особое предложение\" на пиратской базе - вступили в их так называемое братство. Мы в курсе того, что вы уже сделали для своих новых хозяев. И, наконец, мы знаем, что для получения очередного ранга в пиратской иерархии вам поручили особое задание. Только вот какое? Ничего, мы скоро и это узнаем. Хотелось бы, конечно, получить информацию из первых рук, но если это невозможно, то нужные данные нам добудет наша агентура.<br>Единственный вопрос, который мы до сих пор мы не прояснили, касается вашей роли в этом деле. Я предлагаю вам стать нашим агентом в стане пиратов. Вы хорошо защищаете Коалицию от врагов внешних. Думаю, у вас не хуже получится защитить ее от врагов внутренних. Что скажете?", answers: ["DialogAnswer26", "DialogAnswer27"]});
+
+dialogMsg("DialogMsg21", {text: "Не понимаете? Признаться, не ожидал я от храброго рейнджера такого трусливого ответа. Но делать нечего. Прямых улик против вас у нас нет. Пока нет. Но знайте, теперь мы будем собирать досье и на вас. Отныне думайте о том, что делаете и помните: мы открыты для сотрудничества ровно до тех пор, пока в нем нуждаемся. Возможность передумать у вас еще есть, но в любой момент она может испариться. Так что не затягивайте с правильным решением. Вы свободны.", answers: ["DialogAnswer28"]});
+
+dialogMsg("DialogMsg22", {text: "А вот это действительно проблема. Дело в том, что <Name(GroupToShip(Stukach))> - это наш агент. И он провалился. Если пираты поручили вам это задание, то значит, у них есть какие-то сомнения в вашей благонадежности. Если вы его не уничтожите, то можете стать следующим объектом на ликвидацию. Я более чем уверен в том, что они будут следить за вашими действиями. А потому объект придется валить. <br>Делаем так: летите на место, атакуете корабль. Перед самым взрывом наш агент катапультируется в спасательной капсуле. Пираты зафиксируют вспышку и поймут, что задание выполнено. Капсулу доставите на любую обитаемую планету. Вас там встретят. Далее летите на базу и докладываете им, что задание выполнено. Даже если они когда-нибудь узнают о том, что объект уцелел, у вас стопроцентное алиби - вы просто не заметили капсулу. Все поняли? Выполняйте.", answers: ["DialogAnswer29"]});
+
+dialogMsg("DialogMsg23", {text: "Только одна просьба: пожалуйста, сохраните в тайне то, что вы оставили его в живых, иначе по его душу пришлют другого киллера, который может оказаться менее разумным. Тогда нам придется запись этой церемонии награждения отправить на ближайшую пиратскую базу, чтобы качество картинки с камер непрерывного наблюдения смогли оценить ваши так называемые коллеги. Вы меня понимаете?<br>Кстати, перед самой нашей встречей один высокопоставленный офицер из специального отдела Коалиции по борьбе с чем-то там попросил передать вам большой привет и короткое сообщение, цитирую: \"ты движешься в правильном направлении, молодец!\". Что скажете?", answers: ["DialogAnswer0"]});
+
+dialogMsg("DialogMsg24", {text: "Извини брателло, у нас для тебя ничего пока нет. Сам понимаешь, когда все идет тип-топ никто особо дергаться не хочет. Попробуй навестить соседей или заглянуть сюда позднее, когда солнечный ветер переменится.", answers: ["DialogAnswer30"]});
+
+dialogMsg("DialogMsg25", {text: "Эй, братишка, выручи меня, а? Мое корыто развалилось, подвези до ближайшей планеты, век помнить буду!", answers: ["DialogAnswer6"]});
+
+dialogMsg("DialogMsg26", {text: "Хочешь - значит получишь. Сейчас я проверю свои данные, где четко указано, достоин ли ты получить звание <clr>рейдер<clrEnd>. Хм... так-так. Ага... нет, это не интересно, это тоже. О, вот оно... Да, <ShipName(Player())>, ты готов получить следующее пиратское звание. Осталось только пройти тест на платежеспособность. Выкладывай на бочку <money_for_rank> cr и считай, что сертификат о присвоении звания уже у тебя в кармане. И не нужно так удивляться. Вас, претендентов на новые регалии, хоть отбавляй, а ведь каждого надо встретить, поговорить, накапать стаканчик, этак денег на расходы не напасешься. Так что плати, герой, или оставайся с нынешним званием.", answers: [{name: "DialogAnswer32", when: "ShipMoney(Player()) >= money_for_rank"}, "DialogAnswer33"]});
+
+dialogMsg("DialogMsg27", {text: "Поздравляем тебя, <ShipName(Player())>! Теперь ты <clr>рейдер<clrEnd>, гроза мирных кораблей, идущий к успеху и светлому будущему!", answers: ["DialogAnswer34"]});
+
+dialogAnswer("DialogAnswer0", {text: "Всего хорошего!", answerCommand: "planet"});
+
+dialogAnswer("DialogAnswer1", {text: "Уже бегу.", answerCommand: "restart"});
+
+dialogAnswer("DialogAnswer2", {text: "Долго ждать не придется.", answerCommand: "restart", code: function() {
+    quest_taken=1;
+    GotoGov(0);
+}});
+
+dialogAnswer("DialogAnswer3", {text: "Понял, не дурак.", next: "DialogMsg9"});
+
+dialogAnswer("DialogAnswer4", {text: "Я так и не въехал, что делать надо?", next: "DialogMsg8"});
+
+dialogAnswer("DialogAnswer5", {text: "Усек.", next: "DialogMsg10"});
+
+dialogAnswer("DialogAnswer6", {text: "Я тебе не братишка, стукач!", next: "DialogMsg11"});
+
+dialogAnswer("DialogAnswer7", {text: "Как же, заливай дальше.", code: function() {
+    money_offer = GalaxyMoney(3);
+    DChange(DialogMsg12);
+    exit;
+}});
+
+dialogAnswer("DialogAnswer8", {text: "А сколько дашь?", next: "DialogMsg13"});
+
+dialogAnswer("DialogAnswer9", {text: "Ну ладно, мне хватит. Живи, стукач. Скажу, что прибил тебя, ну а ты теперь пиратов за две системы облетай.", code: function() {
+    ShipMoney(Player(), ShipMoney(Player()) + money_offer);
+    Sound('Sound.Buy');
+    DChange(DialogMsg16);
+    exit;
+}});
+
+dialogAnswer("DialogAnswer10", {text: "Смеешься что ли? Да на такие деньги я даже починить корабль после боя не смогу! Кажется, ты все же смерти ищешь!", answerCommand: "exit"});
+
+dialogAnswer("DialogAnswer11", {text: "Меня деньги не интересуют. Предательство кредитами не искупишь.", next: "DialogMsg14"});
+
+dialogAnswer("DialogAnswer12", {text: "Пока что сомневаюсь я в твоей правоте.", next: "DialogMsg15"});
+
+dialogAnswer("DialogAnswer13", {text: "Надоел ты мне своей болтовней, секир-башка тебе!", answerCommand: "exit"});
+
+dialogAnswer("DialogAnswer14", {text: "Ну, что сказать, убедил ты меня! Живи пока что.", next: "DialogMsg16"});
+
+dialogAnswer("DialogAnswer15", {text: "Это ты фантазируешь, чтобы шкуру свою сберечь! Фигушки, я не поведусь.", answerCommand: "exit"});
+
+dialogAnswer("DialogAnswer16", {text: "Сейчас подберу тебя, не боись!", answerCommand: "exit"});
+
+dialogAnswer("DialogAnswer17", {text: "Ну вот еще! Если я на тебя пару выстрелов не потратил - это еще не значит, что я теперь с тобой возиться буду!", answerCommand: "exit"});
+
+dialogAnswer("DialogAnswer18", {text: "Дайте микромодуль <BonusName(rewards[0])>", code: function() {
+    AddItemToShip(Player(),CreateMM(rewards[0]));
+    while (GetShipPirateRank(Player())<2){RaisePirateRank(Player());}
+    reward_received=1;
+    quest_complete;
+    GotoGov(0);
+    ShipOut(Player());
+    if (block_sys_date){block_sys_date=0;
+    NoComeKlingToStar(PlanetToStar(IdToPlanet(gov_planet)),0);}
+    DChange(DialogMsg17);
+    exit;
+}});
+
+dialogAnswer("DialogAnswer19", {text: "Дайте микромодуль <BonusName(rewards[1])>", code: function() {
+    AddItemToShip(Player(),CreateMM(rewards[1]));
+    while (GetShipPirateRank(Player())<2){RaisePirateRank(Player());}
+    reward_received=1;
+    quest_complete;
+    GotoGov(0);
+    ShipOut(Player());
+    if (block_sys_date){block_sys_date=0;
+    NoComeKlingToStar(PlanetToStar(IdToPlanet(gov_planet)),0);}
+    DChange(DialogMsg17);
+    exit;
+}});
+
+dialogAnswer("DialogAnswer20", {text: "Дайте микромодуль <BonusName(rewards[2])>", code: function() {
+    AddItemToShip(Player(),CreateMM(rewards[2]));
+    while (GetShipPirateRank(Player())<2){RaisePirateRank(Player());}
+    reward_received=1;
+    quest_complete;
+    GotoGov(0);
+    ShipOut(Player());
+    if (block_sys_date){block_sys_date=0;
+    NoComeKlingToStar(PlanetToStar(IdToPlanet(gov_planet)),0);}
+    DChange(DialogMsg17);
+    exit;
+}});
+
+dialogAnswer("DialogAnswer21", {text: "Дайте микромодуль <BonusName(rewards[0])>", code: function() {
+    AddItemToShip(Player(),CreateMM(rewards[0]));
+    while (GetShipPirateRank(Player())<2){RaisePirateRank(Player());}
+    reward_received=1;
+    quest_complete;
+    GotoGov(0);
+    ShipOut(Player());
+    if (block_sys_date){block_sys_date=0;
+    NoComeKlingToStar(PlanetToStar(IdToPlanet(gov_planet)),0);}
+    DChange(DialogMsg18);
+    exit;
+}});
+
+dialogAnswer("DialogAnswer22", {text: "Дайте микромодуль <BonusName(rewards[1])>", code: function() {
+    AddItemToShip(Player(),CreateMM(rewards[1]));
+    while (GetShipPirateRank(Player())<2){RaisePirateRank(Player());}
+    reward_received=1;
+    quest_complete;
+    GotoGov(0);
+    ShipOut(Player());
+    if (block_sys_date){block_sys_date=0;
+    NoComeKlingToStar(PlanetToStar(IdToPlanet(gov_planet)),0);}
+    DChange(DialogMsg18);
+    exit;
+}});
+
+dialogAnswer("DialogAnswer23", {text: "Дайте микромодуль <BonusName(rewards[2])>", code: function() {
+    AddItemToShip(Player(),CreateMM(rewards[2]));
+    while (GetShipPirateRank(Player())<2){RaisePirateRank(Player());}
+    reward_received=1;
+    quest_complete;
+    GotoGov(0);
+    ShipOut(Player());
+    if (block_sys_date){block_sys_date=0;
+    NoComeKlingToStar(PlanetToStar(IdToPlanet(gov_planet)),0);}
+    DChange(DialogMsg18);
+    exit;
+}});
+
+dialogAnswer("DialogAnswer24", {text: "С превеликим удовольствием!", answerCommand: "restart"});
+
+dialogAnswer("DialogAnswer25", {text: "Все это весьма занимательно, но я тут причем?", next: "DialogMsg20"});
+
+dialogAnswer("DialogAnswer26", {text: "Я не понимаю, о чем вы говорите.", code: function() {
+    gov_talk = 1;
+    if (block_sys_date){block_sys_date = 0;
+    NoComeKlingToStar(ShipStar(Player()), 0);}
+    DChange(DialogMsg21);
+    exit;
+}});
+
+dialogAnswer("DialogAnswer27", {text: "Я согласен. Мое задание - ликвидировать <0>.", code: function() {
+    gov_talk = 1;
+    if (block_sys_date){block_sys_date = 0;
+    NoComeKlingToStar(ShipStar(Player()), 0);}
+    DChange(DialogMsg22);
+    exit;
+}});
+
+dialogAnswer("DialogAnswer28", {text: "Давно бы так!", answerCommand: "planet"});
+
+dialogAnswer("DialogAnswer29", {text: "Так точно.", answerCommand: "planet"});
+
+dialogAnswer("DialogAnswer30", {text: "Ясно.", answerCommand: "restart"});
+
+dialogAnswer("DialogAnswer31", {text: "Спасибо!", next: "DialogMsg23"});
+
+dialogAnswer("DialogAnswer32", {text: "Ну, вымогатели! Ладно, вот ваши деньги.", code: function() {
+    while (GetShipPirateRank(Player())<2){RaisePirateRank(Player());}
+    ShipMoney(Player(),ShipMoney(Player())-money_for_rank);
+    Sound('Sound.Buy');
+    ShipOut(Player());
+    DChange(DialogMsg27);
+    exit;
+}});
+
+dialogAnswer("DialogAnswer33", {text: "Не буду я вам столько платить! На такие деньги я могу целый год жить!", answerCommand: "restart"});
+
+dialogAnswer("DialogAnswer34", {text: "Угу, спасибо.", answerCommand: "restart"});
+

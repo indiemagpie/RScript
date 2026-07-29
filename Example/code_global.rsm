@@ -1,0 +1,4 @@
+﻿export function onGlobal() {
+  if(GetShipPirateRank(Player()) < 2)
+      GRun();
+}

@@ -1,0 +1,39 @@
+{
+  "name": "rsm-language",
+  "displayName": "Ranger Script Module",
+  "description": "Syntax highlighting and go-to-definition for .rsm files",
+  "version": "0.1.0",
+  "publisher": "rsmc",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "main": "./extension.js",
+  "activationEvents": [
+    "onLanguage:rsm"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "rsm",
+        "aliases": [
+          "Ranger Script Module",
+          "rsm"
+        ],
+        "extensions": [
+          ".rsm"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "rsm",
+        "scopeName": "source.rsm",
+        "path": "./syntaxes/rsm.tmLanguage.json"
+      }
+    ]
+  }
+}

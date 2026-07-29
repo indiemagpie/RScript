@@ -1,0 +1,11 @@
+﻿scriptName("PC_part2");
+
+import from './vars.rsm';
+import from './world.rsm';
+import from './places.rsm';
+import from './states.rsm';
+import from './dialogs.rsm';
+import from './code_global.rsm';
+import from './code_init.rsm';
+import from './code_turn.rsm';
+import from './code_dialogbegin.rsm';
