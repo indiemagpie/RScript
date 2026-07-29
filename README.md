@@ -55,5 +55,5 @@ Named types instead of magic numbers:
 
 ## VS Code plugin for .rsm
 
-[rsmc.rsm-language-0.1.0/](rsmc.rsm-language-0.1.0/) adds .rsm syntax highlighting and
+[rsmc.rsm-language-0.1.0](rsmc.rsm-language-0.1.0/) adds .rsm syntax highlighting and
 go-to-definition — see its [README](rsmc.rsm-language-0.1.0/README.md) for install steps.
