@@ -20,7 +20,7 @@ Script editing tool for [Space Rangers HD](https://store.steampowered.com/app/21
 * CLI for headless build/decompile/export
 
 ## .rsm format & rsmc compiler
-`.rsm` is a small DSL, the input format for rsmc — a standalone console compiler,
+`.rsm` is a small DSL, the input format for rsmc - a standalone console compiler,
 independent from RScript/RSON/GUI, that turns .rsm (with import/export) straight into .scr.
 
 The declarations (import/export/function, object-literal options) are JS-like; the actual code
