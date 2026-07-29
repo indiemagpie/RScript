@@ -41,19 +41,19 @@ export function onTurn() {
 
 See more in the [Example](Example) folder.
 
-Named types instead of magic numbers:
-* `race` / `owner` (planet, ship, group): Maloc, Peleng, People, Fei, Gaal — planet's `owner` also
+Named types:
+* `race` / `owner` (planet, ship, group): Maloc, Peleng, People, Fei, Gaal - planet's `owner` also
   takes Kling, None, Pirate, ByPlayer; ship/group's also takes Kling, Pirate, ByPlayer
 * `economy`: Agriculture, Industrial, Mixed
 * `government`: Anarchy, Dictatorship, Monarchy, Republic, Democracy
 * `type` (ship, group): Ranger, Warrior, Pirate, Transport, Liner, Diplomat, Blazer0-7, Keller0-7,
   Terron0-7, Tranclucator
 * `place` type: free, nearPlanet, inPlanet, toStar, nearItem, fromShip, coords
-* `item.mainType`: Equipment, Weapon, Goods, Artefact, Useless, Unknown — each with its own
+* `item.mainType`: Equipment, Weapon, Goods, Artefact, Useless, Unknown - each with its own
   `item.type` list (e.g. Weapon1-18 for Weapon)
 * `item.owner`: Maloc, Peleng, People, Fei, Gaal, Kling, None, PirateClan
 
 ## VS Code plugin for .rsm
 
 [rsmc.rsm-language-0.1.0](rsmc.rsm-language-0.1.0/) adds .rsm syntax highlighting and
-go-to-definition — see its [README](rsmc.rsm-language-0.1.0/README.md) for install steps.
+go-to-definition - see its [README](rsmc.rsm-language-0.1.0/README.md) for install steps.
