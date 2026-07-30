@@ -39,6 +39,8 @@ export function onTurn() {
 }
 ```
 
+`rsmc build <entry.rsm> -o <out.scr> [--lang-txt <Lang.txt>] [--lang-dat <Lang.dat>]`
+
 See more in the [Example](Example) folder.
 
 Named types:
