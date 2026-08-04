@@ -30,10 +30,10 @@ The source code will be made public after the C++ rework.
 
 Structure:
 ```
-import from './vars.rsm';
+import from './vars.rsm'; // Any name module
 import from './world.rsm';
 
-export function onTurn() {
+export function onTurn() { // The turn code can be split into multiple rsm modules, and each must have an export function onTurn()
     if (CurTurn() % 10 == 0) {
         GTestFirstStart = CurTurn() + Rnd(15, 30);
     }
@@ -43,8 +43,8 @@ Format for ChangeState / DChange / DAdd:
 ```
 // by index and by name
 ChangeState(2); ChangeState('PatrolState');
-DChange(0); DChange('MsgHello');
-DAdd(1); DAdd('AnsBye');
+DChange(0); DChange('NewMessage1');
+DAdd(1); DAdd('EndAnswer1');
 ```
 Build:
 ```
