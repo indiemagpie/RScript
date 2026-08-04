@@ -33,7 +33,8 @@ Structure:
 import from './vars.rsm'; // Any name module
 import from './world.rsm';
 
-export function onTurn() { // The turn code can be split into multiple rsm modules, and each must have an export function onTurn()
+// The turn code can be split into multiple rsm modules, and each must have an export function onTurn()
+export function onTurn() { 
     if (CurTurn() % 10 == 0) {
         GTestFirstStart = CurTurn() + Rnd(15, 30);
     }
