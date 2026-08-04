@@ -28,6 +28,7 @@ inside a function() { ... } body is a separate, C-like game script mini-language
 
 The source code will be made public after the C++ rework.
 
+Structure:
 ```
 import from './vars.rsm';
 import from './world.rsm';
@@ -38,8 +39,17 @@ export function onTurn() {
     }
 }
 ```
-
-`rsmc build <entry.rsm> -o <out.scr> [--lang-txt <Lang.txt>] [--lang-dat <Lang.dat>]`
+Format for ChangeState / DChange / DAdd:
+```
+// by index and by name
+ChangeState(2); ChangeState('PatrolState');
+DChange(0); DChange('MsgHello');
+DAdd(1); DAdd('AnsBye');
+```
+Build:
+```
+rsmc build <entry.rsm> -o <out.scr> [--lang-txt <Lang.txt>] [--lang-dat <Lang.dat>]
+```
 
 See more in the [Example](Example) folder.
 
