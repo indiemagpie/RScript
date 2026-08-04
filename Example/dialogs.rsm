@@ -1,12 +1,12 @@
 ﻿dialog("DialogPB1", {code: function() {
     points='<clrEnd>'+CT('FormRuins.PB.RankPoints.RankPoints');
-    DChange(DialogMsg1);
+    DChange('DialogMsg1');
     exit;
 }});
 
 dialog("DialogPB3", {code: function() {
     GotoGov(2);
-    DChange(DialogMsg0);
+    DChange('DialogMsg0');
     exit;
 }});
 
@@ -80,15 +80,15 @@ dialog("DialogPB4", {code: function() {
       rewards_text[1] = '</color>' + BonusText(rewards[1]) + '<color=0,0,0>';
       rewards_text[2] = '</color>' + BonusText(rewards[2]) + '<color=0,0,0>';
       if(completion_type == 1) {
-        DChange(DialogMsg5);
+        DChange('DialogMsg5');
         exit;
       }
       if(completion_type == 2) {
-        DChange(DialogMsg6);
+        DChange('DialogMsg6');
         exit;
       }
       if(completion_type == 3) {
-        DChange(DialogMsg4);
+        DChange('DialogMsg4');
         exit;
       }
     }
@@ -122,7 +122,7 @@ dialog("DialogPlanet", {code: function() {
     }
     agent_counter = agent_counter + 1;
     Ether(4, '17947350-25C4-4E2D-89FD-A24BD0BEE7C1', "Вы подобрали капсулу с \"неудобным грузом\". Решайте, куда ее отвезти: пиратам или на любую из планет Коалиции.");
-    DChange(DialogMsg3);
+    DChange('DialogMsg3');
     exit;
 }});
 
@@ -151,11 +151,11 @@ dialog("DialogPB2", {code: function() {
         }
     }
     if(syst_pir < syst_dom) {
-      DChange(DialogMsg2);
+      DChange('DialogMsg2');
       exit;
     }
     if(syst_pir >= syst_dom) {
-      DChange(DialogMsg24);
+      DChange('DialogMsg24');
       exit;
     }
 }});
@@ -194,11 +194,11 @@ dialog("DialogStukach", {code: function() {
         counter = counter - 1;
     }
     if(!player_kills_stukach) {
-      DChange(DialogMsg25);
+      DChange('DialogMsg25');
       exit;
     }
     if(player_kills_stukach) {
-      DChange(DialogMsg7);
+      DChange('DialogMsg7');
       exit;
     }
 }});
@@ -278,7 +278,7 @@ dialogAnswer("DialogAnswer6", {text: "Я тебе не братишка, сту�
 
 dialogAnswer("DialogAnswer7", {text: "Как же, заливай дальше.", code: function() {
     money_offer = GalaxyMoney(3);
-    DChange(DialogMsg12);
+    DChange('DialogMsg12');
     exit;
 }});
 
@@ -287,7 +287,7 @@ dialogAnswer("DialogAnswer8", {text: "А сколько дашь?", next: "Dialo
 dialogAnswer("DialogAnswer9", {text: "Ну ладно, мне хватит. Живи, стукач. Скажу, что прибил тебя, ну а ты теперь пиратов за две системы облетай.", code: function() {
     ShipMoney(Player(), ShipMoney(Player()) + money_offer);
     Sound('Sound.Buy');
-    DChange(DialogMsg16);
+    DChange('DialogMsg16');
     exit;
 }});
 
@@ -316,7 +316,7 @@ dialogAnswer("DialogAnswer18", {text: "Дайте микромодуль <BonusN
     ShipOut(Player());
     if (block_sys_date){block_sys_date=0;
     NoComeKlingToStar(PlanetToStar(IdToPlanet(gov_planet)),0);}
-    DChange(DialogMsg17);
+    DChange('DialogMsg17');
     exit;
 }});
 
@@ -329,7 +329,7 @@ dialogAnswer("DialogAnswer19", {text: "Дайте микромодуль <BonusN
     ShipOut(Player());
     if (block_sys_date){block_sys_date=0;
     NoComeKlingToStar(PlanetToStar(IdToPlanet(gov_planet)),0);}
-    DChange(DialogMsg17);
+    DChange('DialogMsg17');
     exit;
 }});
 
@@ -342,7 +342,7 @@ dialogAnswer("DialogAnswer20", {text: "Дайте микромодуль <BonusN
     ShipOut(Player());
     if (block_sys_date){block_sys_date=0;
     NoComeKlingToStar(PlanetToStar(IdToPlanet(gov_planet)),0);}
-    DChange(DialogMsg17);
+    DChange('DialogMsg17');
     exit;
 }});
 
@@ -355,7 +355,7 @@ dialogAnswer("DialogAnswer21", {text: "Дайте микромодуль <BonusN
     ShipOut(Player());
     if (block_sys_date){block_sys_date=0;
     NoComeKlingToStar(PlanetToStar(IdToPlanet(gov_planet)),0);}
-    DChange(DialogMsg18);
+    DChange('DialogMsg18');
     exit;
 }});
 
@@ -368,7 +368,7 @@ dialogAnswer("DialogAnswer22", {text: "Дайте микромодуль <BonusN
     ShipOut(Player());
     if (block_sys_date){block_sys_date=0;
     NoComeKlingToStar(PlanetToStar(IdToPlanet(gov_planet)),0);}
-    DChange(DialogMsg18);
+    DChange('DialogMsg18');
     exit;
 }});
 
@@ -381,7 +381,7 @@ dialogAnswer("DialogAnswer23", {text: "Дайте микромодуль <BonusN
     ShipOut(Player());
     if (block_sys_date){block_sys_date=0;
     NoComeKlingToStar(PlanetToStar(IdToPlanet(gov_planet)),0);}
-    DChange(DialogMsg18);
+    DChange('DialogMsg18');
     exit;
 }});
 
@@ -393,7 +393,7 @@ dialogAnswer("DialogAnswer26", {text: "Я не понимаю, о чем вы г
     gov_talk = 1;
     if (block_sys_date){block_sys_date = 0;
     NoComeKlingToStar(ShipStar(Player()), 0);}
-    DChange(DialogMsg21);
+    DChange('DialogMsg21');
     exit;
 }});
 
@@ -401,7 +401,7 @@ dialogAnswer("DialogAnswer27", {text: "Я согласен. Мое задани�
     gov_talk = 1;
     if (block_sys_date){block_sys_date = 0;
     NoComeKlingToStar(ShipStar(Player()), 0);}
-    DChange(DialogMsg22);
+    DChange('DialogMsg22');
     exit;
 }});
 
@@ -418,7 +418,7 @@ dialogAnswer("DialogAnswer32", {text: "Ну, вымогатели! Ладно, �
     ShipMoney(Player(),ShipMoney(Player())-money_for_rank);
     Sound('Sound.Buy');
     ShipOut(Player());
-    DChange(DialogMsg27);
+    DChange('DialogMsg27');
     exit;
 }});
 
